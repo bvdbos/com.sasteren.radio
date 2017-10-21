@@ -33,4 +33,4 @@ v0.0.1 (21-10-2017) first version
 Icon:
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3
 Image:
-https://nl.pinterest.com/pin/390124386457456779/
+https://commons.wikimedia.org/wiki/File:Philips_Philetta_BD254U_3.jpg
