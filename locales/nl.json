@@ -1,0 +1,15 @@
+{
+	"settings": {
+		"title": "Radio Instellingen",
+		"intro": "voeg hier uw Radiostations toe",
+		"replace_title": "let op",
+		"replace_info": "m3u/pls-urls worden  nog niet ondersteund, alleen mp3-streams.",
+		"textnumber_title": "nog te doen:",
+		"textnumber_info": "<A HREF='https://github.com/bvdbos/com.sasteren.radio'>veel</A>",
+		"replace_items": "radio-urls",
+		"replace_add_button": "radio-station toevoegen",
+		"radio_url": "radio url",
+		"radio_name": "radio naam",
+		"textnumber_checkbox": "doet nog niets"
+	}
+}

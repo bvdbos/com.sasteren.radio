@@ -1,0 +1,15 @@
+{
+	"settings": {
+		"title": "Radio Settings",
+		"intro": "add your Radiostations here",
+		"replace_title": "watch out",
+		"replace_info": "m3u/pls-urls not yet supported.",
+		"textnumber_title": "to do:",
+		"textnumber_info": "<A HREF='https://github.com/bvdbos/com.sasteren.radio'>a lot</A>",
+		"replace_items": "radio-urls",
+		"replace_add_button": "add radio-station",
+		"radio_url": "radio url",
+		"radio_name": "radio titel",
+		"textnumber_checkbox": "does nothing yet"
+	}
+}

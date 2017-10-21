@@ -1,0 +1,454 @@
+<!doctype html>
+<html>
+	<head>
+		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+		<style>
+			a:link {text-decoration: none; color: black;}
+			a:visited {text-decoration: none; color: black;}
+			a:hover {text-decoration: none; color: white; background-color: red; font-weight: bold;}
+			a:active {text-decoration: none; color: black;}
+		</style>
+	</head>
+	<body onunload="save();">
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<h1>Radio-stations</h1>
+					<p data-i18n="settings.intro"></p>
+				</td>
+				<td>
+					<img src="../assets/icon.svg" height="90" width="90" style="float: right;">
+				</td>
+			</tr>
+		</table>
+		<fieldset>
+			<table style="width: 100%;">
+			<tr>
+				<td style="width:640px; vertical-align: top;">
+
+					<!-- list header -->
+					<table style="width: 100%; border: 1px solid Gainsboro; border-collapse: collapse;">
+						<tr style="background-color: Gainsboro;">
+							<th id="headerText" title="" style="width: 160px; cursor:pointer;" data-i18n="settings.radio_name" onclick="headerSort(0);"></th>
+							<th id="headerNumb" title="" style="cursor:pointer;" data-i18n="settings.radio_url" onclick="headerSort(1);"></th>
+							<td><img src="../assets/images/icon_homey_wait.png" id="icon_homey" title="" height="20" width="20" style="float: right;"></td>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+
+					<!-- replacement list -->
+					<div id="tableScroll" style="width: 640px; height: 400px; border: 1px solid Gainsboro; overflow: auto;">
+						<table id="tableReplace" class="input_fields_wrap" style="width: 100%; border-collapse: collapse;"></table>
+					</div>
+
+					<!-- new replacement button and item counter -->
+					<table style="width:100%; border-collapse: collapse;">
+						<tr>
+							<td style="text-align: left;">
+								<button class="add_field_button" data-i18n="settings.replace_add_button"></button>
+							</td>
+							<th style="text-align: center;">
+								<div id="itemCount" title ="" style="font-size: 14px; cursor:default;"></div><div style="font-size:10px; cursor:default;" data-i18n="settings.replace_items"></div>
+							</th>
+						</tr>
+					</table>
+				</td>
+				<td style="vertical-align: top;">
+
+					<!-- info text -->
+					<div style="margin-left: 10px; margin-right: 10px;">
+					<h2 data-i18n="settings.replace_title"></h2>
+					<p data-i18n="settings.replace_info"></p>
+					<h2 data-i18n="settings.textnumber_title"></h2>
+					<p data-i18n="settings.textnumber_info"></p>
+					<p><input id="textnumber_checkbox" type="checkbox" name="textnumber" value="1" onclick="showIconHomey('upload'); Homey.set('textnumber', $('#textnumber_checkbox:checked').length);"> <span data-i18n="settings.textnumber_checkbox"></span></p>
+					
+					</div>
+				</td>
+			</tr>
+			</table>
+		</fieldset>
+
+		<script type="text/javascript">
+		instanceHomey = null;
+		var max_fields	= 200;	//maximum input boxes allowed
+		var count_fields = 0;	//used input boxes
+		var fieldSort = [1, 0]; // [text,replace], 0 = not sorted, 1 = increasing, 2 = decreasing
+		var replacements = {};
+		var checkList = {};
+		var docReplacement = document.getElementById("tableReplace");
+		var saveStandby = 0;
+		var txtRemove = '', txtUsed =  '', txtFree = '', txtUpdated = '';
+
+
+		$(document).ready(function() {
+			var wrapper	= $(".input_fields_wrap");	//Fields wrapper
+			var add_button	= $(".add_field_button");	//Add button ID
+
+			$(add_button).click(function(e){ //on add input button click
+				e.preventDefault();
+				if(count_fields < max_fields){ //still input boxes allowed
+					appendBoxes('naam', 'url');
+					document.getElementById("tableScroll").scrollTop = document.getElementById("tableScroll").scrollHeight;
+					document.getElementsByClassName("input")[document.getElementsByClassName("input").length-1].focus();
+				}
+			});
+			
+			$(wrapper).on("click",".remove_field", function(e){ // remove click
+				e.preventDefault(); 
+				$(this).parent().parent('tr').remove();
+				refreshItemCounter(-1);
+				inputChanged();
+			});
+
+		});
+
+
+		function onHomeyReady(Homey){
+			instanceHomey = Homey;
+			Homey.ready();
+
+			txtRemove = __('settings.remove');
+			txtUsed = __('settings.used');
+			txtFree = __('settings.free');
+			txtUpdated = __('settings.updated');
+			document.getElementById("headerText").title = __('settings.sort_text');
+			document.getElementById("headerNumb").title = __('settings.sort_replacement');
+			document.getElementById("icon_homey").title ='Homey: ' + txtUpdated;
+
+			Homey.get('textnumber', function(err, textnumber){
+				if( err ) return console.error('Could not get textnumber', err);
+				if (textnumber == 1) {
+					$('#textnumber_checkbox').attr('checked', true);
+				}
+			});
+
+			//create replacement list
+			docReplacement.innerHTML = '';
+			Homey.get('radio', function(err, replaceData){
+				if( err ) return console.error('Could not get radiostations', err);
+				refreshItemCounter(); // reset
+				console.log(replaceData);
+				var i = 0;
+				$.each(replaceData, function ( index, value ) {
+					replacements[index] = value;
+					docReplacement.innerHTML = docReplacement.innerHTML + getReplacementHTML(index, value, getTooltip(index, value), i);
+					refreshItemCounter(1);
+					i++;
+				});
+
+				if (count_fields === 0) { appendBoxes('?', '0'); } // Always add one!
+				refreshItemCounter(0);
+
+				fieldSort = [2, 0];
+				headerSort(0);
+				document.getElementById("icon_homey").src ='../assets/images/icon_homey.png';
+			});
+		}
+
+		
+		function appendBoxes(val1, val2) {
+			var tempDoc = '';
+			// rebuild list to include latest changes
+			var i = 0;
+			$.each($('.input_holder'), function( index, value ) {
+				var t_input = $(this).find('.input').val().trim();
+				var t_replace = $(this).find('.replace').val().trim();
+				tempDoc = tempDoc + getReplacementHTML(t_input, t_replace, getTooltip(t_input, t_replace), i);
+				i++;
+			});
+
+			 //add new input fields
+			docReplacement.innerHTML = tempDoc + getReplacementHTML(val1, val2, txtRemove, i);
+			refreshItemCounter(1);
+			refreshCheckList();
+		}
+
+
+		function getReplacementHTML(val1, val2, valRemove, idx){
+			if( val1 == '?' ){
+				var colBack = '#E0E0E0';
+			} else {
+				var colBack = '#FFFFFF';
+			}
+			return ('<tr class="input_holder" style="border: 1px solid #F0F0F0;"><td style="width: 160px;"><input style="border: 0px solid #F0F0F0; background-color: ' + colBack + ';" id="inText" class="input" type="text" value="'+val1+'" oninput="inputChanged(this, ' + idx + ');" /></td><td style="width: 400px;"><input style="border: 0px solid #F0F0F0; width: 350px;" id="inUrl" class="replace" type="text" value="'+val2+'" oninput="inputChanged(this, ' + idx + ');" /></td><td>&nbsp;<a href="#" title="'+valRemove+'" class="remove_field">&nbsp;X&nbsp;</a></td></tr>');
+			//return ('<tr class="input_holder" style="border: 1px solid #F0F0F0;"><td style="width: 160px;"><input style="border: 0px solid #F0F0F0; background-color: ' + colBack + ';" id="inText" class="input" type="text" value="'+val1+'" oninput="inputChanged(this, ' + idx + ');" /></td><td style="width: 400px;"><input style="border: 0px solid #F0F0F0;" id="inUrl" class="replace" type="text" value="'+val2+'" oninput="inputChanged(this, ' + idx + ');" /></td><td>&nbsp;<a href="#" title="'+valRemove+'" class="remove_field">&nbsp;X&nbsp;</a></td></tr>');
+
+			}
+
+
+		function getTooltip(txt, nr){
+			return (txtRemove + ':\n' + txt + ' ... ' + nr);
+		}
+
+
+		function refreshItemCounter(stepVal){
+		// Used replacements counter.
+		// <stepVal> = count_fields change.
+		// <stepVal> = undefined --> reset: set count_fields = 0
+
+			if(stepVal == undefined){ 
+				count_fields = 0;
+			} else{
+				count_fields += stepVal;
+			}
+			if(count_fields < max_fields){
+				$('.add_field_button').show();
+			} else {
+				$('.add_field_button').hide();
+			}
+			xDoc = document.getElementById("itemCount");
+			xDoc.innerHTML = '' + count_fields;
+			xDoc.title = count_fields.toString() + ' ' + txtUsed + ',\n' + (max_fields - count_fields) + ' ' + txtFree;
+		}
+
+
+		function sortList(listColumn, includeNew){
+		// read data from input_holder and sort by <listcolumn>,
+		// copy sorted data to replacements{} and include added empty inputs when <includeNew> = true (default)
+		// pre-set fieldSort[<listColumn>] to 1 for ascending and 2 for descending.
+
+			if(listColumn == undefined){ listColumn = 0; }
+			if(includeNew == undefined){ includeNew = true; }
+
+			var list_in = {}, list_in_lower = {}, unordered = [];
+			replacements = {};
+
+			// load replacement-list to list_in{}
+			var indexCount = 1;
+			$.each($('.input_holder'), function( index, value ) {
+				var t_input = $(this).find('.input').val().trim();
+				var t_replace = $(this).find('.replace').val().trim();
+				list_in[t_input] = t_replace;
+
+				var xCnt = indexCount.toString(); indexCount++;
+				while(xCnt.length<3){ xCnt = '0' + xCnt; }
+				switch(listColumn){
+
+				case 0: // text
+					var tLower = t_input.toLowerCase();
+					if( t_input.substr(0,1) == '?'){
+						if( fieldSort[listColumn] == 2 ){
+							tLower = '(';
+						} else {
+							tLower = '|';
+						}
+						tLower = tLower + xCnt + tLower;
+					}
+					break;
+
+				case 1: // number
+					var xNum = Number(t_replace).toString();
+					while(xNum.length<6){ xNum = '0' + xNum; }
+					if( t_input.substr(0,1) == '?'){
+						if( fieldSort[listColumn] == 2 ){
+							var tLower = '(';
+						} else {
+							var tLower = '|';
+						}
+						tLower = tLower + xCnt + xNum + t_input.toLowerCase();
+					} else {
+						var tLower = '0000' + xNum + t_input.toLowerCase();
+					}
+					break;
+				}
+				list_in_lower[tLower] = t_input;
+				unordered.push(tLower);
+			});
+			// sort and reverse unordered[] and move list_in{} to ordered replacements{} object
+			unordered.sort();
+			if( fieldSort[listColumn] == 2 ){unordered.reverse();}
+
+			unordered.forEach(function(item, index){
+				itemReplace = list_in_lower[item];
+				if( itemReplace.indexOf('?') > -1 ){
+					if( includeNew ){
+						replacements[itemReplace] = list_in[itemReplace];
+					}
+				} else {
+					replacements[itemReplace] = list_in[itemReplace];
+				}
+			});
+		}
+
+
+		function headerSort( listColumn ){
+			fieldSort[listColumn]++; if( fieldSort[listColumn] > 2 ){ fieldSort[listColumn] = 1;}
+			fieldSort[1 - listColumn] = 0;
+			sortList(listColumn); 
+			var i = 0;
+			$.each(replacements, function(index, value){
+				document.getElementsByClassName("input")[i].value = index;
+				document.getElementsByClassName("replace")[i].value = value;
+				document.getElementsByClassName("remove_field")[i].title = getTooltip(index, value);
+				i++;
+			});
+			refreshCheckList();
+		}
+
+
+		function refreshCheckList(notInclude){
+			if( notInclude == undefined ){ notInclude = -1;}
+
+			checkList = {};
+			var i = 0;
+			$.each($('.input_holder'), function( index, value ) {
+				var t_input = $(this).find('.input').val().trim();
+
+				if( (i != notInclude) && (t_input.substr(0,1) != '?') ){
+					var t_replace = $(this).find('.replace').val().trim();
+					//var checkIndex = t_input.toLowerCase();
+					//checkList[checkIndex] = t_replace;
+					//var checkIndex = t_input.toLowerCase();
+					checkList[t_input.toLowerCase()] = t_replace;
+				}
+				i++;
+			});
+		}
+
+
+
+		function inputChanged(obj, idx){
+					console.log("input changed");
+			clearTimeout(saveStandby);
+			refreshCheckList(idx);
+			if(obj != undefined){ // at text or number
+
+				var xId = obj.id, xValue = obj.value;
+				console.log (obj.id);
+				console.log(obj.value);
+				switch(obj.id){
+
+				case 'inText':
+					// input character control
+					var charControl = '0123456789 abcdefghijklmnopqrstuvwxyz';
+					for(var i = 0; i< xValue.length; i++){
+						if( !(i==0 && xValue.substr(0,1)=='?') & charControl.indexOf(xValue.substr(i,1).toLowerCase()) == -1 ){
+							xValue = xValue.substr(0,i) + xValue.substr(i+1);
+						}
+					}
+					while( xValue.length > 1 && ( xValue.substr(0,1)=='?' || xValue.substr(0,1)==' ')){
+						xValue = xValue.substr(1);
+					}
+					if( xValue =='' || xValue ==' ' ){
+						xValue = '?'; 
+						obj.style.backgroundColor = '#F0F0F0';
+					} else {
+						obj.style.backgroundColor = '#FFFFFF';
+					}
+					xValue = xValue.replace('  ', ' ');
+
+					// check if text already exists
+					if(checkList[xValue.trim().toLowerCase()] != undefined){
+						obj.style.backgroundColor = '#FFE0D0';
+						xValue = '?' + xValue;
+					}
+
+					if(obj.value != xValue){
+						obj.value = xValue;
+					}
+					break;
+
+				case 'inUrl':
+					console.log(xValue.substr(0,5));				
+					if (xValue.substr(0,5) == 'https') {
+					console.log("is https");
+						xValue = '?'; 
+						obj.style.backgroundColor = '#F0F0F0';
+					} else {
+						obj.style.backgroundColor = '#FFFFFF';
+					}
+					
+					if ((xValue.substr(0,4) == 'http') || (xValue == '?')) {
+					} else {
+						console.log ("geen http");
+						xValue = '?'; 
+						obj.style.backgroundColor = '#F0F0F0';
+					}
+					
+					
+					break;	
+				}
+				
+				if( xValue.substr(0,1) != '?' ){
+					saveStandby = setTimeout(function() { save(); }, 4000); // wait for next edit before saving
+				}
+			} else { // at remove
+				saveStandby = setTimeout(function() { save(); }, 2000); // wait for next edit before saving
+			}
+			showIconHomey('wait');
+		}
+
+
+		var iconBlink, iconBlinkReset, iconBlinkStatus = -1;
+		function showIconHomey(iconType){
+			if( iconType == undefined ){ iconType = 'default'; }
+
+			clearInterval( iconBlink );
+			clearTimeout( iconBlinkReset );
+
+			switch(iconType){
+			case 'default':
+				document.getElementById("icon_homey").src ='../assets/images/icon_homey.png';
+				document.getElementById("icon_homey").title ='Homey: ' + txtUpdated;
+				break;
+
+			case 'wait':
+				iconBlink = setInterval(function(){
+					if( iconBlinkStatus == -1 ){
+						document.getElementById("icon_homey").src ='../assets/images/icon_homey_wait.png';
+					} else {
+						document.getElementById("icon_homey").src ='../assets/images/icon_homey.png';
+					}
+					iconBlinkStatus = -iconBlinkStatus;
+				}, 200);
+				document.getElementById("icon_homey").title ='...';
+				break;
+
+			case 'upload':
+				iconBlink = setInterval(function(){
+					if( iconBlinkStatus == -1 ){
+						document.getElementById("icon_homey").src ='../assets/images/icon_homey_upload.png';
+					} else {
+						document.getElementById("icon_homey").src ='../assets/images/icon_homey.png';
+					}
+					iconBlinkStatus = -iconBlinkStatus;
+				}, 200);
+
+				iconBlinkReset = setTimeout(function() {
+					showIconHomey('default');
+				}, 2000);
+				document.getElementById("icon_homey").title ='Homey: ' + txtUpdated;
+				break;
+			}
+		}
+
+
+		function save() {
+			showIconHomey('upload');
+
+			// memorize current sort settings
+			var memFieldSort = [].concat(fieldSort);
+ 
+			// store radiostations reversed alphabetically on Homey
+			fieldSort = [2, 0]; 
+			sortList(0, false);
+			console.log(replacements);
+			for(i in replacements){
+				console.log(i);
+				console.log(replacements[i]);
+			}
+			instanceHomey.set('radio', replacements);
+
+			// restore original sort settings
+			fieldSort = [].concat(memFieldSort);
+			if( fieldSort[0]>0 ){
+				sortList(0);
+			} else if( fieldSort[1]>0 ){
+				sortList(1);
+			} 
+		}
+		</script>
+	</body>
+</html>
