@@ -25,20 +25,12 @@ BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06
 100% NL : http://18403.live.streamtheworld.com/100PNL_MP3_SC?  
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
 
-<<<<<<< HEAD
 ## Changelog
 v0.0.2 (21-10-2017) changed pics
 v0.0.1 (21-10-2017) first version
 
-##Thanks to
-Icon:
-https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3
-Image:
-https://commons.wikimedia.org/wiki/File:Philips_Philetta_BD254U_3.jpg
-=======
 ## Thanks to
 Icon:  
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3  
 Image:  
-https://nl.pinterest.com/pin/390124386457456779/  
->>>>>>> a1564a6b9736c74ce1a1c19e6bbaf42f7000c64a
+https://commons.wikimedia.org/wiki/File:Philips_Philetta_BD254U_3.jpg  
