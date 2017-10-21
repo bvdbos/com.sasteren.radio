@@ -8,7 +8,7 @@
         "en": "Listen to online radio stations through Homey Music"
     },
     "category": "music",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "compatibility": ">=1.5.0",
     "author": {
         "name": "Bas van den Bosch",

@@ -25,6 +25,10 @@ BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06
 100% NL : http://18403.live.streamtheworld.com/100PNL_MP3_SC?
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3
 
+## Changelog
+v0.0.2 (21-10-2017) changed pics
+v0.0.1 (21-10-2017) first version
+
 ##Thanks to
 Icon:
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3
