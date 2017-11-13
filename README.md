@@ -26,6 +26,7 @@ BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
 
 ## Changelog
+v1.0.0 (13-11-2017) added global flowtriggers, edited settings-screen for Mobile app v2
 v0.0.2 (21-10-2017) changed pics  
 v0.0.1 (21-10-2017) first version  
 

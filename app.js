@@ -36,8 +36,6 @@ class Radio extends Homey.App {
 			Homey.ManagerMedia.requestPlaylistsUpdate();
 		});
 
-		startPollingForUpdates();
-
 		Homey.ManagerMedia.on('getPlaylists', (callback) => {
 			console.log('Homey gets playlists');
 			console.log(data);
@@ -81,27 +79,6 @@ class Radio extends Homey.App {
 	}
 }
 
-//polling updates
-function startPollingForUpdates() {
-	var pollingInterval = setInterval(() => {
-		console.log('start polling');
-
-			if (urllist === null) {
-				console.log('urllist is null');
-				urllist = {"name" : 'radionaam',"url": 'http://icecast.omroep.nl/radio1-sb-mp3'};
-			};
-			
-			var result = [{
-				type: 'playlist',
-				id: 'radiostations',
-				title: 'radiostations',
-				tracks: parseTracks(urllist)
-			}];
-				data=result;
-				Homey.ManagerMedia.requestPlaylistsUpdate();		
-	}, 300000);
-};
-
 //get name and url list from settings and create array
 function getsettings() {
 	return new Promise(function(resolve,reject){
@@ -110,13 +87,57 @@ function getsettings() {
 				console.log('settings is null');
 				replText = {radio1: 'http://icecast.omroep.nl/radio1-sb-mp3'};
 			};
-			console.log(replText);
+		console.log(replText);
 		var list = []
 		if (typeof replText === 'object') {
 			Object.keys(replText).forEach(function (key) {
 				list.push( {"name":key,"url":replText[key]})
 				return list;
 			});
+			
+		list.forEach(function(listobject) {
+			var objIndex = urllist.findIndex(obj => obj.url == listobject.url);
+			console.log ("objIndex ", objIndex, "in urllist voor ",listobject.url);
+			if (objIndex > -1) {
+				console.log("gegevens overnemen");
+				listobject.token = urllist[objIndex].token;
+			} else {
+				listobject.token = new Homey.FlowToken( listobject.name, {
+						type: 'string',
+						title: listobject.name
+					});
+				listobject.token.register()
+					.then(() => {
+						return listobject.token.setValue( listobject.url );
+					})
+			}
+		});
+
+		if (urllist.length > 0) {
+		urllist.forEach(function(listobject) {
+			var objIndex = list.findIndex(obj => obj.url == listobject.url);
+			console.log("listobject in lijst ", objIndex);
+			if (objIndex < 0) {
+				//not found so delete
+				//console.log("url niet gevonden dus verwijderen");
+				listobject.token.unregister()
+					.then(() => {
+						console.log("token unregistered");
+					})
+			} else {
+				//console.log("url gevonden dus niets doen");
+				//wel gevonden dus niets doen
+			}
+		});
+		}		
+			
+			
+			
+			
+			
+			
+			
+			
 		resolve(list);	
 		}
 	})

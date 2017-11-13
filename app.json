@@ -2,13 +2,15 @@
     "id": "com.sasteren.radio",
     "sdk": 2,
     "name": {
-        "en": "Radio"
+        "en": "Radio",
+		"nl": "Radio"
     },
     "description": {
-        "en": "Listen to online radio stations through Homey Music"
+        "en": "Listen to online radio stations through Homey Music",
+		"nl": "Luiter naar online radio met Homey Muziek"
     },
     "category": "music",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "compatibility": ">=1.5.0",
     "author": {
         "name": "Bas van den Bosch",
