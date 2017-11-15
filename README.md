@@ -23,7 +23,13 @@ Piratenkanon : http://176.9.32.52:8028/PiratenKanon-MP3
 Skihut FM : http://skihutfm.shoutcaststream.com:8042/stream  
 BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06  
 100% NL : http://18403.live.streamtheworld.com/100PNL_MP3_SC?  
+
+### German
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
+
+### Nerd-stuff
+Iphone : http://feeds.feedburner.com/tii?format=xml
+
 
 ## Changelog
 v1.0.0 (13-11-2017) added global flowtriggers, edited settings-screen for Mobile app v2
@@ -34,4 +40,4 @@ v0.0.1 (21-10-2017) first version
 Icon:  
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3  
 Image:  
-https://commons.wikimedia.org/wiki/File:Philips_Philetta_BD254U_3.jpg  
+https://nl.pinterest.com/pin/372532200400916346/ 
