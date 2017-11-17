@@ -24,6 +24,9 @@ Skihut FM : http://skihutfm.shoutcaststream.com:8042/stream
 BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06  
 100% NL : http://18403.live.streamtheworld.com/100PNL_MP3_SC?  
 
+### Special streams
+Sinterklaas-radio : http://stream03.sintradio.nl/stream  
+
 ### German
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
 
