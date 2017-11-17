@@ -1,12 +1,12 @@
 # Radio
-Listen to online radio stations through Homey Music
+Listen to online radio stations through Homey Music  
 
 ## to do:
 mp3-streams only
-m3u and pls streams not yet supported
+m3u and pls streams not yet supported  
 
 ## examples
-Some examples of streams which can be added:
+Some examples of streams which can be added:  
 
 ### NL:
 Radio 1 : http://icecast.omroep.nl/radio1-sb-mp3  
@@ -27,12 +27,9 @@ BNR : http://icecast-bnr.cdp.triple-it.nl/bnr_mp3_96_06
 ### German
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
 
-### Nerd-stuff
-Iphone : http://feeds.feedburner.com/tii?format=xml
-
-
 ## Changelog
-v1.0.0 (13-11-2017) added global flowtriggers, edited settings-screen for Mobile app v2
+v1.1.0 (17-11-2017) play radio through flowcard-search (Homey-Music)  
+v1.0.0 (13-11-2017) added global flowtriggers, edited settings-screen for Mobile app v2  
 v0.0.2 (21-10-2017) changed pics  
 v0.0.1 (21-10-2017) first version  
 
@@ -40,4 +37,4 @@ v0.0.1 (21-10-2017) first version
 Icon:  
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3  
 Image:  
-https://nl.pinterest.com/pin/372532200400916346/ 
+https://nl.pinterest.com/pin/352899320771649081/
