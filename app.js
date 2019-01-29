@@ -35,7 +35,8 @@ class Radio extends Homey.App {
 			data=result;
 			Homey.ManagerMedia.requestPlaylistsUpdate();
 		});
-
+		
+if (Homey.ManagerMedia){
 		Homey.ManagerMedia.on('search', (queryObject, callback) => {
 			//data is a single playlist
 			var tracklist=data[0].tracks;
@@ -67,6 +68,7 @@ class Radio extends Homey.App {
 			console.log(urlobj);			
 			return callback(null, urlobj);
 		});
+}
 		
 		Homey.ManagerSettings.on('set', function(settings) {
 			getsettings().then(function(results) {

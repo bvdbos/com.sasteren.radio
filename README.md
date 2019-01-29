@@ -31,6 +31,7 @@ Sinterklaas-radio : http://stream03.sintradio.nl/stream
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
 
 ## Changelog
+v1.2.0 (29-1-2019) fix for Homey v2.x
 v1.1.1 (10-3-2018) edited app-page
 v1.1.0 (17-11-2017) play radio through flowcard-search (Homey-Music)  
 v1.0.0 (13-11-2017) added global flowtriggers, edited settings-screen for Mobile app v2  
