@@ -16,7 +16,10 @@
         "name": "Bas van den Bosch",
         "email": "bvdbos@gmail.com"
     },
-    "athomForumDiscussionId": 4055,
+    "bugs": {
+        "url": "https://github.com/bvdbos/com.sasteren.radio/issues"
+    },
+    "homeyCommunityTopicId": 9368,
     "media": [ "getPlaylists", "getPlaylist", "play", "search"],
     "images": {
         "large": "/assets/images/large.jpg",
