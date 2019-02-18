@@ -33,10 +33,12 @@ class Radio extends Homey.App {
 				tracks: parseTracks(urllist)
 				}];
 			data=result;
-			Homey.ManagerMedia.requestPlaylistsUpdate();
+			if (Homey.ManagerMedia){
+				Homey.ManagerMedia.requestPlaylistsUpdate();
+			}
 		});
 		
-if (Homey.ManagerMedia){
+	if (Homey.ManagerMedia){
 		Homey.ManagerMedia.on('search', (queryObject, callback) => {
 			//data is a single playlist
 			var tracklist=data[0].tracks;
@@ -68,7 +70,7 @@ if (Homey.ManagerMedia){
 			console.log(urlobj);			
 			return callback(null, urlobj);
 		});
-}
+	}
 		
 		Homey.ManagerSettings.on('set', function(settings) {
 			getsettings().then(function(results) {
@@ -88,7 +90,9 @@ if (Homey.ManagerMedia){
 					tracks: parseTracks(urllist)
 				}];
 			data=result;
-			Homey.ManagerMedia.requestPlaylistsUpdate();
+			if (Homey.ManagerMedia){
+				Homey.ManagerMedia.requestPlaylistsUpdate();
+			}
 			});
 		});
 		
