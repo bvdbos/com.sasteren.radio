@@ -12,7 +12,7 @@
 	"de": "Online-Radio Stationen über Homey Music hören"
     },
     "category": "music",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "compatibility": ">=1.5.0",
     "author": {
         "name": "Bas van den Bosch",

@@ -2,7 +2,7 @@
 Listen to online radio stations through Homey Music  
 
 ## to do:
-mp3-streams only
+mp3-streams only:
 m3u and pls streams not yet supported  
 
 ## examples
@@ -34,6 +34,7 @@ Sinterklaas-radio : http://stream03.sintradio.nl/stream
 538 Verrückte Halbe Stunde : http://20103.live.streamtheworld.com/TLPSTR21.mp3  
   
 ## Changelog  
+v1.2.2 (3-3-2019) added german translation  
 v1.2.1 (18-2-2019) fix calling mamangermedia after changing setting   
 v1.2.0 (29-1-2019) fix for Homey v2.x  
 v1.1.1 (10-3-2018) edited app-page
@@ -46,6 +47,8 @@ v0.0.1 (21-10-2017) first version
 Icon:  
 https://visualpharm.com/free-icons/radio-595b40b75ba036ed117d88c3  
 Image:  
-https://nl.pinterest.com/pin/352899320771649081/
+https://nl.pinterest.com/pin/352899320771649081/  
 Hendrik Jansen:  
-https://www.hendrikjansen.nl/henk/streaming.html
+https://www.hendrikjansen.nl/henk/streaming.html  
+  
+  
