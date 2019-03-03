@@ -3,11 +3,13 @@
     "sdk": 2,
     "name": {
         "en": "Radio",
-		"nl": "Radio"
+	"nl": "Radio",
+	"de": "Radio"
     },
     "description": {
         "en": "Listen to online radio stations through Homey Music",
-		"nl": "Luiter naar online radio met Homey Muziek"
+	"nl": "Luiter naar online radio met Homey Muziek",
+	"de": "Höre Online-Radio Stationen über Homey Music"
     },
     "category": "music",
     "version": "1.2.1",
